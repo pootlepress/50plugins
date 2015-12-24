@@ -8,6 +8,7 @@ Version: 1.0.0
 Author URI: http://shramee.com/
 @developer shramee <shramee.srivastav@gmail.com>
 */
+
 /**
  * Plugins Directory Manager main class
  * @static string $token Plugin token
@@ -16,7 +17,7 @@ Author URI: http://shramee.com/
  * @static string $path Plugin root dir path
  * @static string $version Plugin version
  */
-class Plugins_Dir_Man{
+class Plugins_Dir_Man {
 	/** @var string Token */
 	public static $token;
 
@@ -35,23 +36,25 @@ class Plugins_Dir_Man{
 	 * @since   1.0.0
 	 */
 	public function __construct() {
-		self::$token   =   'plgns-dir-man';
-		self::$url     =   plugin_dir_url( __FILE__ );
-		self::$path    =   plugin_dir_path( __FILE__ );
-		self::$version =   '1.0.0';
+		self::$token   = 'plgns-dir-man';
+		self::$url     = plugin_dir_url( __FILE__ );
+		self::$path    = plugin_dir_path( __FILE__ );
+		self::$version = '1.0.0';
 		$this->init();
 	} // End __construct()
 
 	/**
 	 * Hooks a function on to a specific action.
-	 * @param string	$tag			The name of the action to which the $function_to_add is hooked.
-	 * @param string	$method			The name of the function you wish to be called.
-	 * @param int		$priority		Optional - Priority for execution
-	 * @param int		$accepted_args	Optional - The number of arguments the function accepts. Default 1.
+	 *
+	 * @param string $tag The name of the action to which the $function_to_add is hooked.
+	 * @param string $method The name of the function you wish to be called.
+	 * @param int $priority Optional - Priority for execution
+	 * @param int $accepted_args Optional - The number of arguments the function accepts. Default 1.
+	 *
 	 * @return true Will always return true.
 	 */
 	public function hook( $tag, $method, $priority = 10, $accepted_args = 1 ) {
-		add_filter($tag, array( $this, $method ), $priority, $accepted_args);
+		add_filter( $tag, array( $this, $method ), $priority, $accepted_args );
 	}
 
 	/**
@@ -65,6 +68,7 @@ class Plugins_Dir_Man{
 		$this->hook( 'add_meta_boxes', 'add_meta_box' );
 		$this->hook( 'admin_head', 'css' );
 		$this->hook( 'save_post', 'save_meta_box' );
+		$this->hook( 'rest_api_init', 'api_reg' );
 		register_activation_hook( __FILE__, array( $this, 'rewrite' ) );
 	} // End init()
 
@@ -106,15 +110,15 @@ class Plugins_Dir_Man{
 			'plugin_cat',
 			'cool-plugin',
 			array(
-				'label' => __( 'Category' ),
-				'rewrite' => array( 'slug' => 'plugin_cat' ),
+				'label'        => __( 'Category' ),
+				'rewrite'      => array( 'slug' => 'plugin_cat' ),
 				'hierarchical' => true,
 			)
 		);
 	}
 
 	public function save_meta_box( $post_id ) {
-		if ( empty( $_POST['plgn-dir-man-nonce'] ) ||  ! wp_verify_nonce( $_POST['plgn-dir-man-nonce'], 'plgn-dir-man' ) ) {
+		if ( empty( $_POST['plgn-dir-man-nonce'] ) || ! wp_verify_nonce( $_POST['plgn-dir-man-nonce'], 'plgn-dir-man' ) ) {
 			return;
 		}
 		if ( ! empty( $_POST['plgn-dir-man'] ) ) {
@@ -140,7 +144,7 @@ class Plugins_Dir_Man{
 		$value = wp_parse_args(
 			get_post_meta( $post->ID, 'plgn-dir-man', true ),
 			array(
-				'video' => '',
+				'video'  => '',
 				'rating' => 1,
 			)
 		);
@@ -191,6 +195,51 @@ class Plugins_Dir_Man{
 		);
 
 		register_post_type( 'cool-plugin', $args );
+	}
+
+	public function api_reg() {
+		register_rest_route( 'plgn-dir', 'plugins', array(
+			'methods'  => 'GET',
+			'callback' => array( $this, 'api' ),
+		) );
+	}
+
+	public function api() {
+		$args  = array( 'posts_per_page' => -1, 'post_type' => 'cool-plugin', );
+		$posts = get_posts( $args );
+
+		$return = array();
+
+		foreach ( $posts as $post ) {
+			setup_postdata( $post );
+			$id = $post->ID;
+
+			$reviews = array();
+			$comments = get_comments( "post_id=$id" );
+			foreach ( $comments as $comm ) {
+				if ( 1 == $comm->comment_approved && 0 == $comm->comment_parent ) {
+					$reviews[] = array(
+						'content' => $comm->comment_content,
+						'author'  => $comm->comment_author,
+					);
+				}
+			}
+
+			$return[] = array(
+				'title'   => $post->post_title,
+				'content' => $post->post_content,
+				'img'     => get_the_post_thumbnail_url( $id, 'full' ),
+				'info'    => get_post_meta( $id, 'plgn-dir-man' ),
+				'reviews' => $reviews,
+			);
+
+			unset( $comments );
+			unset( $post );
+		}
+
+		wp_reset_postdata();
+
+		return $return;
 	}
 }
 
