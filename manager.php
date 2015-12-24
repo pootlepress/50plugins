@@ -146,7 +146,7 @@ class Plugins_Dir_Man {
 			array(
 				'video'  => '',
 				'rating' => 1,
-				'link' => '',
+				'link'   => '',
 			)
 		);
 
@@ -212,7 +212,7 @@ class Plugins_Dir_Man {
 	}
 
 	public function api() {
-		$args  = array( 'posts_per_page' => -1, 'post_type' => 'cool-plugin', );
+		$args  = array( 'posts_per_page' => - 1, 'post_type' => 'cool-plugin', );
 		$posts = get_posts( $args );
 
 		$return = array();
@@ -221,7 +221,7 @@ class Plugins_Dir_Man {
 			setup_postdata( $post );
 			$id = $post->ID;
 
-			$reviews = array();
+			$reviews  = array();
 			$comments = get_comments( "post_id=$id" );
 			foreach ( $comments as $comm ) {
 				if ( 1 == $comm->comment_approved && 0 == $comm->comment_parent ) {
@@ -232,13 +232,13 @@ class Plugins_Dir_Man {
 				}
 			}
 
-			$return[] = array(
+			$return[ get_the_term_list( $id, 'plugin_cat', '', '::', '' ) ][] = array(
 				'title'   => $post->post_title,
 				'excerpt' => $post->post_excerpt,
 				'img'     => get_the_post_thumbnail_url( $id, 'full' ),
-				'info'    => get_post_meta( $id, 'plgn-dir-man' ),
+				'info'    => get_post_meta( $id, 'plgn-dir-man', true ),
 				'reviews' => $reviews,
-				'url' => get_post_permalink( $id ),
+				'url'     => get_post_permalink( $id ),
 			);
 
 			unset( $comments );
