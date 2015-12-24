@@ -1,0 +1,25 @@
+/**
+ * Plugin options page styles
+ *
+ * @package Plugins_50
+ * @developer shramee <shramee.srivastav@gmail.com>
+ */
+div#TB_window, iframe#TB_iframeContent {
+	top: 50px;
+	left: 50px;
+	bottom: 50px;
+	right: 50px;
+	width: auto !important;
+	height: auto !important;
+	margin: 0 !important;
+}
+
+iframe#TB_iframeContent {
+	width: 100% !important;
+	height: 100% !important;
+}
+
+div#TB_title {
+	height: 0;
+	border: none;
+}
