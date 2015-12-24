@@ -146,13 +146,20 @@ class Plugins_Dir_Man {
 			array(
 				'video'  => '',
 				'rating' => 1,
+				'link' => '',
 			)
 		);
+
+		echo
+			'<label for="plgn-dir-man-link">Plugin Url / Wordpress slug</label>' .
+			'<input type="text" id="plgn-dir-man-link" name="plgn-dir-man[link]" value="' .
+			esc_attr( $value['link'] ) . '" size="25" />';
 
 		echo
 			'<label for="plgn-dir-man-video">Video Url</label>' .
 			'<input type="text" id="plgn-dir-man-video" name="plgn-dir-man[video]" value="' .
 			esc_attr( $value['video'] ) . '" size="25" />';
+
 		echo
 			'<label for="plgn-dir-man-rating">Critic Rating</label>' .
 			'<input type="range" min="0" max="5" id="plgn-dir-man-rating" name="plgn-dir-man[rating]" value="' .
@@ -227,10 +234,11 @@ class Plugins_Dir_Man {
 
 			$return[] = array(
 				'title'   => $post->post_title,
-				'content' => $post->post_content,
+				'excerpt' => $post->post_excerpt,
 				'img'     => get_the_post_thumbnail_url( $id, 'full' ),
 				'info'    => get_post_meta( $id, 'plgn-dir-man' ),
 				'reviews' => $reviews,
+				'url' => get_post_permalink( $id ),
 			);
 
 			unset( $comments );
