@@ -100,6 +100,8 @@ class Plugins_50{
 		$this->admin = Plugins_50_Admin::instance();
 
 		//Adding front end JS and CSS in /assets folder
+		add_action( 'admin_head',	array( $this->admin, 'css' ) );
+		//Adding front end JS and CSS in /assets folder
 		add_action( 'admin_enqueue_scripts',	array( $this->admin, 'enqueue' ) );
 		//Adding front end JS and CSS in /assets folder
 		add_action( 'admin_init',				array( $this->admin, 'init_settings' ) );

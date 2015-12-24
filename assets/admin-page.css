@@ -5,10 +5,10 @@
  * @developer shramee <shramee.srivastav@gmail.com>
  */
 div#TB_window, iframe#TB_iframeContent {
-	top: 50px;
-	left: 50px;
-	bottom: 50px;
-	right: 50px;
+	top: 25px;
+	left: 25px;
+	bottom: 25px;
+	right: 25px;
 	width: auto !important;
 	height: auto !important;
 	margin: 0 !important;
@@ -22,4 +22,9 @@ iframe#TB_iframeContent {
 div#TB_title {
 	height: 0;
 	border: none;
+}
+
+div.tb-close-icon {
+	right: -30px;
+	color: #ccc;
 }

@@ -2,7 +2,7 @@
 /*
 Plugin Name: 50 Plugins
 Plugin URI: http://pootlepress.com/
-Description: Pro add on for pootle page builder, exhibit your posts, WooCommerce products, photos in grids, masonry layout or slides. Customize individual pages and create beautiful one page parallax websites.
+Description: Lists 50 plugins handpicked by experts to get you your WP website up and running!
 Author: pootlepress
 Version: 1.0.0
 Author URI: http://pootlepress.com/

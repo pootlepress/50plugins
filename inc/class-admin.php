@@ -43,25 +43,8 @@ class Plugins_50_Admin{
 	function css() {
 		?>
 		<style>
-			#adminmenu #menu-posts-cool-plugin .dashicons-before:before {
+			#adminmenu #toplevel_page_plugins50 .dashicons-before:before {
 				color: #ef4832;
-			}
-
-			#adminmenu #menu-posts-cool-plugin.wp-has-current-submenu .dashicons-before:before {
-				color: #fff;
-			}
-
-			#adminmenu #menu-posts-cool-plugin.wp-has-current-submenu a.wp-has-current-submenu {
-				background-color: #ef4832;
-			}
-
-			#plgn-dir-man label {
-				display: block;
-				padding: 7px 0;
-			}
-
-			#plgn-dir-man input {
-				width: 100%;
 			}
 		</style>
 		<?php
