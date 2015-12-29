@@ -99,13 +99,15 @@ class Plugins_50{
 		//Instantiating admin class
 		$this->admin = Plugins_50_Admin::instance();
 
-		//Adding front end JS and CSS in /assets folder
+		//Add inline admin CSS
 		add_action( 'admin_head',	array( $this->admin, 'css' ) );
-		//Adding front end JS and CSS in /assets folder
+		//AJAX action
+		add_action( 'wp_ajax_50plugins_single',	array( $this->admin, 'output_page' ) );
+		//Add front end JS and CSS
 		add_action( 'admin_enqueue_scripts',	array( $this->admin, 'enqueue' ) );
-		//Adding front end JS and CSS in /assets folder
+		//Add admin settings
 		add_action( 'admin_init',				array( $this->admin, 'init_settings' ) );
-		//Admin settings tab
+		//Add admin menu page
 		add_filter( 'admin_menu',				array( $this->admin, 'admin_menu' ), 25 );
 	} // End init()
 }

@@ -59,7 +59,7 @@ class Plugins_50_Admin{
 	public function admin_menu() {
 		add_menu_page( '50 Plugins', '50 Plugins', 'manage_options', 'plugins50', array(
 			$this,
-			'menu_page',
+			'output_page',
 		), 'dashicons-admin-plugins', 61 );
 	}
 
@@ -85,9 +85,12 @@ class Plugins_50_Admin{
 	 * Display the admin page.
 	 * @since 0.1.0
 	 */
-	public function menu_page() {
-
-		include 'tpl-addons.php';
+	public function output_page() {
+		if ( $plugins50_data_url = filter_input( INPUT_GET, 'single' ) ) {
+			require 'tpl-plugin.php';
+		} else {
+			require 'tpl-plugins.php';
+		}
 	}
 
 	/**

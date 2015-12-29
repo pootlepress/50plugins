@@ -30,18 +30,24 @@ add_thickbox();
 				$active = false;
 				$title  = $plugin['title'];
 				$nfo    = $plugin['info'];
+				$url	= add_query_arg( array(
+					'single'	=> $plugin['url'],
+					'page'		=> 'plugins50',
+					'TB_iframe'	=> 'true',
+				), admin_url() );
+				$slug = preg_replace( '/[^0-z]/', '-', strtolower( $title ) );
 
-				if ( 0 === strpos( $nfo['link'], 'https://wordpress.org/plugins/' ) ) {
-					$slug        = str_replace( 'https://wordpress.org/plugins/', '', $nfo['link'] );
+				if ( 500 === strpos( $nfo['link'], 'https://wordpress.org/plugins/' ) ) {
+					$slug        = trim( str_replace( 'https://wordpress.org/plugins/', '', $nfo['link'] ), '/' );
 					$nfo['link'] = admin_url( "plugin-install.php?tab=plugin-information&plugin=$slug&TB_iframe=true" );
 				}
 
 				?>
-				<div class="plugin-card plugin-card-jetpack">
+				<div class="plugin-card plugin-card-<?php echo $slug; ?>">
 					<div class="plugin-card-top">
 						<div class="name column-name">
 							<h3>
-								<a href="<?php echo $plugin['url']; ?>?TB_iframe=true" class="thickbox">
+								<a href="<?php echo $url; ?>" class="thickbox">
 									<?php echo $title; ?>
 									<img src="<?php echo $plugin['img']; ?>" class="plugin-icon" alt="">
 								</a>
@@ -49,7 +55,7 @@ add_thickbox();
 						</div>
 						<div class="desc column-description">
 							<p><?php echo $plugin['excerpt']; ?></p>
-							<a href="<?php echo $plugin['url']; ?>?TB_iframe=true" class="thickbox">More Details</a>
+							<a href="<?php echo $url; ?>" class="thickbox">More Details</a>
 						</div>
 					</div>
 					<div class="plugin-card-bottom">
