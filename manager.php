@@ -1,11 +1,12 @@
 <?php
 /*
-Plugin Name: Plugins directory manager
-Plugin URI: http://pootlepress.com/
-Description: Create and manage your directory of plugins
-Author: Shramee
-Version: 1.0.0
-Author URI: http://shramee.com/
+ * Plugin Name: Plugins directory manager
+ * Plugin URI: http://pootlepress.com/
+ * Description: Create and manage your directory of plugins
+ * Author: Shramee
+ * Version: 1.0.0
+ * Author URI: http://shramee.com/
+ * Requires at least: 4.4
 @developer shramee <shramee.srivastav@gmail.com>
 */
 
@@ -207,11 +208,56 @@ class Plugins_Dir_Man {
 	public function api_reg() {
 		register_rest_route( 'plgn-dir', 'plugins', array(
 			'methods'  => 'GET',
-			'callback' => array( $this, 'api' ),
+			'callback' => array( $this, 'api_plugins' ),
+		) );
+		register_rest_route( 'plgn-dir', 'plugin', array(
+			'methods'  => 'GET',
+			'callback' => array( $this, 'api_plugin' ),
 		) );
 	}
 
-	public function api() {
+	public function api_plugin() {
+
+		if ( empty( $_GET['id'] ) ) {
+			return 'ID not set';
+		}
+
+		if ( ! is_numeric( $_GET['id'] ) ) {
+			return 'Invalid ID';
+		}
+
+		$id   = $_GET['id'];
+		$post = WP_Post::get_instance( $id );
+
+		if ( ! $post || 'cool-plugin' != $post->post_type ) {
+			return 'Invalid plugin id.';
+		}
+		$reviews  = array();
+		$comments = get_comments( "post_id=$id" );
+		foreach ( $comments as $comm ) {
+			if ( 1 == $comm->comment_approved && 0 == $comm->comment_parent ) {
+				$reviews[] = array(
+					'content' => $comm->comment_content,
+					'author'  => $comm->comment_author,
+				);
+			}
+		}
+
+		$return = array(
+			'title'   => $post->post_title,
+			'content' => $post->post_content,
+			'img'     => get_the_post_thumbnail_url( $id, 'full' ),
+			'info'    => get_post_meta( $id, 'plgn-dir-man', true ),
+			'url'     => get_post_permalink( $id ),
+			'reviews' => $reviews,
+		);
+
+		wp_reset_postdata();
+
+		return $return;
+	}
+
+	public function api_plugins() {
 		$args  = array( 'posts_per_page' => - 1, 'post_type' => 'cool-plugin', );
 		$posts = get_posts( $args );
 
@@ -221,27 +267,14 @@ class Plugins_Dir_Man {
 			setup_postdata( $post );
 			$id = $post->ID;
 
-			$reviews  = array();
-			$comments = get_comments( "post_id=$id" );
-			foreach ( $comments as $comm ) {
-				if ( 1 == $comm->comment_approved && 0 == $comm->comment_parent ) {
-					$reviews[] = array(
-						'content' => $comm->comment_content,
-						'author'  => $comm->comment_author,
-					);
-				}
-			}
-
 			$return[ get_the_term_list( $id, 'plugin_cat', '', '::', '' ) ][] = array(
 				'title'   => $post->post_title,
 				'excerpt' => $post->post_excerpt,
-				'img'     => get_the_post_thumbnail_url( $id, 'full' ),
+				'img'     => get_the_post_thumbnail_url( $id ),
 				'info'    => get_post_meta( $id, 'plgn-dir-man', true ),
-				'reviews' => $reviews,
-				'url'     => get_post_permalink( $id ),
+				'url'     => site_url( "/wp-json/plgn-dir/plugin?id=$id" ),
 			);
 
-			unset( $comments );
 			unset( $post );
 		}
 
