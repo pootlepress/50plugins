@@ -1,13 +1,13 @@
 <?php
 /*
- * Plugin Name: Plugins directory manager
+ * Plugin Name: 50 Plugins directory manager
  * Plugin URI: http://pootlepress.com/
- * Description: Create and manage your directory of plugins
+ * Description: Create and manage 50plugins directory and serves it via wp api
  * Author: Shramee
  * Version: 1.0.0
  * Author URI: http://shramee.com/
  * Requires at least: 4.4
-@developer shramee <shramee.srivastav@gmail.com>
+ * @developer shramee <shramee.srivastav@gmail.com>
 */
 
 /**
