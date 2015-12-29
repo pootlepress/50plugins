@@ -8,7 +8,7 @@
  * Author URI: http://shramee.com/
  * Requires at least: 4.4
  * @developer shramee <shramee.srivastav@gmail.com>
-*/
+ */
 
 /**
  * Plugins Directory Manager main class
@@ -239,6 +239,7 @@ class Plugins_Dir_Man {
 				$reviews[] = array(
 					'content' => $comm->comment_content,
 					'author'  => $comm->comment_author,
+					'email'  => $comm->comment_author_email,
 				);
 			}
 		}
